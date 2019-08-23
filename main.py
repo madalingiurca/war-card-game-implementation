@@ -1,4 +1,4 @@
-from GameClasses import Deck, cardFight
+from GameClasses import Deck, startGame
 from Player import Player
 
 deck = Deck()
@@ -34,7 +34,22 @@ print("{p2Name}: {p2CardsNO} cards|".format(p2Name=player2.name, p2CardsNO=playe
 # Inceputul jocului
 # Acesta se termina cand unul din jucatori ramane fara carti
 # Castigatorul se declara cel care inca are Cards in lista self.hand
-print(player1.hand.__len__())
-cardFight(player1.hand, player2.hand)
-
-print(player1.hand.__len__())
+print("Mirel: ", end='')
+for card in player1.hand:
+    print(card.number, end='| ')
+print('\n')
+print("Mihai: ", end='')
+for card in player2.hand:
+    print(card.number, end='| ')
+print('\n')
+print("______________\nSTART GAME\n____________")
+while player1.hand.__len__() > 15 or player2.hand.__len__() > 15:
+    startGame(player1, player2)
+    print("Mirel: ", end='')
+    for card in player1.hand:
+        print(card.number, end='| ')
+    print('\n')
+    print("Mihai: ", end='')
+    for card in player2.hand:
+        print(card.number, end='| ')
+    print('\n')

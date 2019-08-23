@@ -1,22 +1,33 @@
 from random import shuffle
 
+from Player import Player
 
-def cardFight(deck1, deck2):
-    card1 = deck1.pop()
-    card2 = deck2.pop()
 
+def cardFight(card1, card2):
     if card1 > card2:
-        print("castiga p1")
         return 1
-    elif card1 < card2:
-        print("castiga p2")
+    elif card2 > card1:
         return 2
     else:
-        print("+1 mana")
-        return cardFight(deck1, deck2)
+        return 0
 
 
-# def StartGame(p1, p2):
+def startGame(p1: Player, p2: Player):
+    card1 = p1.hand.pop()
+    card2 = p2.hand.pop()
+    res = cardFight(card1, card2)
+    if res == 1:
+        print("!!!P1 won cards {},{}".format(card1.number, card2.number))
+        p1.hand.insert(0, card1)
+        p1.hand.insert(0, card2)
+        # print("player 1 won the hand")
+    elif res == 2:
+        print("!!!P2 won cards {},{}".format(card1.number, card2.number))
+        p2.hand.insert(0, card1)
+        p2.hand.insert(0, card2)
+        # print("player 2 won the hand")
+    else:
+        startGame(p1, p2)
 
 
 class Card:
