@@ -30,3 +30,7 @@ while True:
 
 print("| {p1Name}: {p1CardsNO} cards | VS |".format(p1Name=player1.name, p1CardsNO=player1.hand.__len__()), end=" ")
 print("{p2Name}: {p2CardsNO} cards|".format(p2Name=player2.name, p2CardsNO=player2.hand.__len__()))
+
+# Inceputul jocului
+# Acesta se termina cand unul din jucatori ramane fara carti
+# Castigatorul se declara cel care inca are Cards in lista self.hand

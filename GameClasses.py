@@ -1,6 +1,12 @@
 from random import shuffle
 
 
+def cardFight(card1, card2):
+
+
+def StartGame(p1, p2):
+
+
 class Card:
     def __init__(self, no, cardType):
         self.number = no
