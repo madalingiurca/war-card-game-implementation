@@ -3,31 +3,47 @@ from random import shuffle
 from Player import Player
 
 
-def cardFight(card1, card2):
-    if card1 > card2:
-        return 1
-    elif card2 > card1:
-        return 2
-    else:
-        return 0
+def WarGame():
+    pass
 
 
-def startGame(p1: Player, p2: Player):
-    card1 = p1.hand.pop()
-    card2 = p2.hand.pop()
-    res = cardFight(card1, card2)
-    if res == 1:
-        print("!!!P1 won cards {},{}".format(card1.number, card2.number))
-        p1.hand.insert(0, card1)
-        p1.hand.insert(0, card2)
-        # print("player 1 won the hand")
-    elif res == 2:
-        print("!!!P2 won cards {},{}".format(card1.number, card2.number))
-        p2.hand.insert(0, card1)
-        p2.hand.insert(0, card2)
-        # print("player 2 won the hand")
-    else:
-        startGame(p1, p2)
+def startRound(player1: Player, player2: Player):
+    table = list()
+
+    Player1Card = player1.playCard()
+    #   print("{} played {} card".format(player1.name, Player1Card.number))
+    Player2Card = player2.playCard()
+    #   print("{} played {} card".format(player2.name, Player2Card.number))
+
+    table.append(Player1Card)
+    table.append(Player2Card)
+
+    if Player1Card > Player2Card:
+        #      print("{} wins the round!".format(player1.name))
+        player1.hand = table + player1.hand
+    elif Player2Card > Player1Card:
+        #      print("{} wins the round!".format(player2.name))
+        player2.hand = table + player2.hand
+    else:                   # War TIME
+        msg = 'War Starts'
+        print('-' * len(msg))
+        print(msg)
+        print('-' * len(msg))
+        if player2.hand.__len__() == 1 or player1.hand.__len__() == 1:
+            print("weak players")
+            return 1
+        for i in range(3):
+            table.extend([player1.playCard(), player2.playCard()])
+        warCardP1 = player1.playCard()
+        warCardP2 = player2.playCard()
+#
+        table = [warCardP1, warCardP2] + table
+        if warCardP1 > warCardP2:
+            #            print("{} wins the war!".format(player1.name))
+            player1.hand = table + player1.hand
+        elif warCardP2 > warCardP1:
+            #            print("{} wins the war!".format(player2.name))
+            player2.hand = table + player2.hand
 
 
 class Card:
@@ -42,7 +58,13 @@ class Card:
             return False
 
     def __gt__(self, other):
-        if self.number >= other.number:
+        if self.number > other.number:
+            return True
+        else:
+            return False
+
+    def __eq__(self, other):
+        if self.number == other.number:
             return True
         else:
             return False

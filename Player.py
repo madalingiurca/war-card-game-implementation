@@ -8,8 +8,7 @@ class Player:
         self.hand.append(card)
 
     def playCard(self):
-        try:
-            card = self.hand.pop()
-            return card
-        except IndexError:
-            return "{name} has no more cards".format(name=self.name)
+            return self.hand.pop()
+
+    def hasCards(self):
+        return self.hand.__len__() != 0
