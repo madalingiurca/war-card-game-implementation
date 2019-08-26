@@ -84,18 +84,21 @@ def start_round(player1: Player, player2: Player):
                 p1_warCard = player1.playCard()
                 p2_warCard = player2.playCard()
                 table.extend([p1_warCard, p2_warCard])
+
                 if p1_warCard > p2_warCard:
                     print("{} wins the War and the cards: ".format(player1.name))
                     for card in table:
                         print(card)
                     print("\n")
                     player1.hand = table + player1.hand
+
                 else:
                     print("{} wins the War and the cards:".format(player1.name))
                     for card in table:
                         print(card)
                     print("\n")
                     player1.hand = table + player1.hand
+
             else:
 
                 if player1.hand.__len__() == 1:
