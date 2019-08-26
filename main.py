@@ -1,4 +1,4 @@
-from GameClasses import Deck, startGame
+from GameClasses import Deck, start_round
 from Player import Player
 
 deck = Deck()
@@ -43,13 +43,6 @@ for card in player2.hand:
     print(card.number, end='| ')
 print('\n')
 print("______________\nSTART GAME\n____________")
-while player1.hand.__len__() > 15 or player2.hand.__len__() > 15:
-    startGame(player1, player2)
-    print("Mirel: ", end='')
-    for card in player1.hand:
-        print(card.number, end='| ')
-    print('\n')
-    print("Mihai: ", end='')
-    for card in player2.hand:
-        print(card.number, end='| ')
-    print('\n')
+status = start_round(player1, player2)
+while status != 1 and status != 2:
+    status = start_round(player1, player2)

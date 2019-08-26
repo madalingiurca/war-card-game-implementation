@@ -13,3 +13,9 @@ class Player:
             return card
         except IndexError:
             return "{name} has no more cards".format(name=self.name)
+
+    def hasCards(self):
+        if self.hand.__len__() > 0:
+            return True
+        else:
+            return False
