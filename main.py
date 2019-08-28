@@ -15,10 +15,10 @@ def printHands(p1, p2):
 
 deck = Deck()
 deck.shuffleDeck()
-# name = input("Player 1: Name?\n")
-player1 = Player("Mirel")
-# name = input("Player 2: Name?\n")
-player2 = Player("Mihai")
+name = input("Player 1: Name?\n").capitalize()
+player1 = Player(name)
+name = input("Player 2: Name?\n").capitalize()
+player2 = Player(name)
 while True:
     try:
         player1.drawCards(deck)
@@ -34,13 +34,18 @@ print("{p2Name}: {p2CardsNO} cards|".format(p2Name=player2.name, p2CardsNO=playe
 # Acesta se termina cand unul din jucatori ramane fara carti
 # Castigatorul se declara cel care inca are Cards in lista self.hand
 table = list()
+rounds = 0
 try:
     while True:
+        rounds += 1
         start_round(player1, player2, table)
-        print(player1, " | table cards:", len(table), " | ", player2)
-
 except IndexError:
+    # print(player1, " | table cards:", len(table), " | ", player2)
     if len(player1.hand) == 0:
-        print("P2 Wins")
+        player2.hand = table + player2.hand
+        table.clear()
+        print("\n________\nGameOver\n{} wins the game\nNo. of rounds: {}".format(player2.name, rounds))
     if len(player2.hand) == 0:
-        print("P1 Wins")
+        player1.hand = table + player1.hand
+        table.clear()
+        print("\n________\nGameOver\n{} wins the game\nNo. of rounds: {}".format(player1.name, rounds))

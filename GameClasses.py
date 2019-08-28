@@ -1,4 +1,5 @@
 from random import shuffle
+
 from Player import Player
 
 
@@ -51,28 +52,17 @@ def start_round(player1: Player, player2: Player, table: list):
     p1Card = player1.playCard()
     p2Card = player2.playCard()
 
-    table += [p1Card, p2Card]
+    table += [p2Card, p1Card]
     if p1Card > p2Card:
-        print("P1 wins the round")
+        print("{} wins the round".format(player1.name))
+        shuffle(table)
         player1.hand = table + player1.hand
         table.clear()
         return 0
     if p2Card > p1Card:
-        print("P2 wins the round")
+        print("{} wins the round".format(player2.name))
+        shuffle(table)
         player2.hand = table + player2.hand
         table.clear()
         return 0
-    p1WarCard = player1.playCard()
-    p2WarCard = player2.playCard()
-    table += [p1Card, p2Card]
-    if p1WarCard > p2WarCard:
-        print("P1 wins the round")
-        player1.hand = table + player1.hand
-        table.clear()
-        return 0
-    if p2WarCard > p1WarCard:
-        print("P2 wins the round")
-        player2.hand = table + player2.hand
-        table.clear()
-        return 0
-
+    start_round(player1, player2, table)
