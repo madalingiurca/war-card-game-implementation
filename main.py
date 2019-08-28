@@ -1,4 +1,4 @@
-from GameClasses import Deck, startRound
+from GameClasses import Deck, start_round
 from Player import Player
 
 
@@ -33,16 +33,14 @@ print("{p2Name}: {p2CardsNO} cards|".format(p2Name=player2.name, p2CardsNO=playe
 # Inceputul jocului
 # Acesta se termina cand unul din jucatori ramane fara carti
 # Castigatorul se declara cel care inca are Cards in lista self.hand
+table = list()
+try:
+    while True:
+        start_round(player1, player2, table)
+        print(player1, " | table cards:", len(table), " | ", player2)
 
-noRounds = 0
-#printHands(player1, player2)
-while player1.hasCards() and player2.hasCards():
-    noRounds += 1
-    status = startRound(player1, player2)
-    if status == 1:
-        print("it is over")
-        break
-    printHands(player1, player2)
-    #print('Nr runde: ',noRounds)
-    print("Mirel: {}, Mihai: {}".format(player1.hand.__len__(), player2.hand.__len__()))
-print("Game Over", noRounds)
+except IndexError:
+    if len(player1.hand) == 0:
+        print("P2 Wins")
+    if len(player2.hand) == 0:
+        print("P1 Wins")
