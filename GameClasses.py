@@ -59,58 +59,32 @@ def cardFight(card1, card2):
 
 
 def start_round(player1: Player, player2: Player):
+
     if player1.hasCards() and player2.hasCards():
+
+        table = []
+
         p1_card = player1.playCard()
         p2_card = player2.playCard()
 
-        table = list()
         table.extend([p1_card, p2_card])
 
-        if p1_card > p2_card:
-            print("{} wins the round and the cards: {} {}".format(player1.name, p1_card, p2_card))
-            player1.hand = table + player1.hand
+        if p1_card == p2_card:
+            try:
+                p1_wcard = player1.playCard()
+            except IndexError:
+                p1_wcard = Card(0, None)
+            try:
+                p2_wcard = player2.playCard()
+            except IndexError:
+                p2_wcard = Card(0, None)
+
+        # continue with War, cards have been drawn
+
         elif p1_card < p2_card:
-            print("{} wins the round and the cards: {} {}".format(player2.name, p1_card, p2_card))
+            print("{} wins the round!".format(player2.name))
             player2.hand = table + player2.hand
-        elif p1_card == p2_card:
-            msg = "WAAAAAAAAAAARR"
-            print(len(msg) * '_')
-            print(msg)
-            print(len(msg) * '_')
-            if player1.hand.__len__() > 1 and player2.hand.__len__() > 1:
-                # every player puts 1 face down card
-                table.extend([player1.playCard(), player2.playCard()])
-                # War cards played
-                p1_warCard = player1.playCard()
-                p2_warCard = player2.playCard()
-                table.extend([p1_warCard, p2_warCard])
 
-                if p1_warCard > p2_warCard:
-                    print("{} wins the War and the cards: ".format(player1.name))
-                    for card in table:
-                        print(card)
-                    print("\n")
-                    player1.hand = table + player1.hand
-
-                else:
-                    print("{} wins the War and the cards:".format(player1.name))
-                    for card in table:
-                        print(card)
-                    print("\n")
-                    player1.hand = table + player1.hand
-
-            else:
-
-                if player1.hand.__len__() == 1:
-                    print("Player {} has no more cards to fight at war".format(player1.name))
-                    return 2
-                else:
-                    print("Player {} has no more cards to fight at war".format(player2.name))
-                    return 1
-    else:
-        if not player1.hasCards():
-            print("player 2 wins")
-            return 2
-        else:
-            print("player 1 wins")
-            return 1
+        elif p1_card > p2_card:
+            print("{} wins the round!".format(player1.name))
+            player1.hand = table + player1.hand

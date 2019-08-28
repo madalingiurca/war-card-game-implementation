@@ -11,8 +11,8 @@ class Player:
         try:
             card = self.hand.pop()
             return card
-        except IndexError:
-            return "{name} has no more cards".format(name=self.name)
+        except IndexError as err:
+            return err
 
     def hasCards(self):
         if self.hand.__len__() > 0:
