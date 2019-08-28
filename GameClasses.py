@@ -3,49 +3,6 @@ from random import shuffle
 from Player import Player
 
 
-def WarGame():
-    pass
-
-
-def startRound(player1: Player, player2: Player):
-    table = list()
-
-    Player1Card = player1.playCard()
-    #   print("{} played {} card".format(player1.name, Player1Card.number))
-    Player2Card = player2.playCard()
-    #   print("{} played {} card".format(player2.name, Player2Card.number))
-
-    table.append(Player1Card)
-    table.append(Player2Card)
-
-    if Player1Card > Player2Card:
-        #      print("{} wins the round!".format(player1.name))
-        player1.hand = table + player1.hand
-    elif Player2Card > Player1Card:
-        #      print("{} wins the round!".format(player2.name))
-        player2.hand = table + player2.hand
-    else:                   # War TIME
-        msg = 'War Starts'
-        print('-' * len(msg))
-        print(msg)
-        print('-' * len(msg))
-        if player2.hand.__len__() == 1 or player1.hand.__len__() == 1:
-            print("weak players")
-            return 1
-        for i in range(3):
-            table.extend([player1.playCard(), player2.playCard()])
-        warCardP1 = player1.playCard()
-        warCardP2 = player2.playCard()
-#
-        table = [warCardP1, warCardP2] + table
-        if warCardP1 > warCardP2:
-            #            print("{} wins the war!".format(player1.name))
-            player1.hand = table + player1.hand
-        elif warCardP2 > warCardP1:
-            #            print("{} wins the war!".format(player2.name))
-            player2.hand = table + player2.hand
-
-
 class Card:
     def __init__(self, no, cardType):
         self.number = no
@@ -69,6 +26,9 @@ class Card:
         else:
             return False
 
+    def __str__(self):
+        return "{} {}".format(self.number, self.cardType)
+
 
 class Deck:
     cards = []
@@ -87,3 +47,44 @@ class Deck:
 
         popped = self.cards.pop()
         return popped
+
+
+def cardFight(card1, card2):
+    if card1 > card2:
+        return 1
+    elif card2 > card1:
+        return 2
+    elif card1 == card2:
+        return 0
+
+
+def start_round(player1: Player, player2: Player):
+
+    if player1.hasCards() and player2.hasCards():
+
+        table = []
+
+        p1_card = player1.playCard()
+        p2_card = player2.playCard()
+
+        table.extend([p1_card, p2_card])
+
+        if p1_card == p2_card:
+            try:
+                p1_wcard = player1.playCard()
+            except IndexError:
+                p1_wcard = Card(0, None)
+            try:
+                p2_wcard = player2.playCard()
+            except IndexError:
+                p2_wcard = Card(0, None)
+
+        # continue with War, cards have been drawn
+
+        elif p1_card < p2_card:
+            print("{} wins the round!".format(player2.name))
+            player2.hand = table + player2.hand
+
+        elif p1_card > p2_card:
+            print("{} wins the round!".format(player1.name))
+            player1.hand = table + player1.hand
