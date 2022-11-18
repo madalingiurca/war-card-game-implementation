@@ -1,43 +1,26 @@
-import os
 from enum import Enum
 from random import shuffle
 
-import pygame.image
 from pygame import Surface
 from pygame.font import Font, get_default_font
-from pygame.sprite import Sprite, Group
+from pygame.sprite import Group
 
-from core.GameConstants import STARTING_SCREEN_TEXT
-from core.Player import Player
+from core.cards import Card
+from core.game_constants import STARTING_SCREEN_TEXT
+from core.player import Player
 
 color_speed = 1
 color = [26, 115, 50]
 color_direction = [0, 1, 0]
 
 
-def draw_starting_screen(screen: Surface):
-    card_back_1 = Card("back", 1)
-    card_back_1.rect.center = screen.get_rect().center
-    card_back_1.rect.x -= 1.5 * card_back_1.rect.width
-
-    card_back_2 = Card("back", 2)
-    card_back_2.rect.center = screen.get_rect().center
-    card_back_2.rect.x += 1.5 * card_back_2.rect.width
-
-    card_backs = Group()
-    card_backs.add(card_back_1)
-    card_backs.add(card_back_2)
-
+def update_game_start_text(screen: Surface):
     font = Font(get_default_font(), 24)
 
-    card_backs.draw()
     screen.blit(
         font.render(STARTING_SCREEN_TEXT, True, color),
         (screen.get_rect().height // 2, screen.get_rect().width // 2)
     )
-
-
-
     color_update(color)
 
 
@@ -53,37 +36,6 @@ class GameState(Enum):
     PLAY = 1
     WAR = 2
     ENDING = 3
-
-
-class Card(Sprite):
-    def __init__(self, no, card_type):
-        super().__init__()
-        self.number = no
-        self.type = card_type
-        self.image = pygame.image.load(f"{os.getcwd()}/assets/cards/{self.number}_{self.type}.png").convert()
-
-        self.rect = self.image.get_rect()
-
-    def __lt__(self, other):
-        if self.number < other.number:
-            return True
-        else:
-            return False
-
-    def __gt__(self, other):
-        if self.number > other.number:
-            return True
-        else:
-            return False
-
-    def __eq__(self, other):
-        if self.number == other.number:
-            return True
-        else:
-            return False
-
-    def __str__(self):
-        return "{} {}".format(self.number, self.type)
 
 
 class Deck:
