@@ -352,3 +352,7 @@ cython_debug/
 #.idea/
 
 # End of https://www.toptal.com/developers/gitignore/api/python,intellij,pycharm
+
+/.idea/*.xml
+/.idea/*.iml
+/.idea/inspectionProfiles/
