@@ -1,7 +1,7 @@
 import pygame
 import sys
 
-from GameEngine import Deck, GameState, draw_starting_screen
+from core.GameEngine import Deck, GameState, draw_starting_screen
 from settings import *
 
 if __name__ == '__main__':

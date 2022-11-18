@@ -1,5 +1,5 @@
-from GameEngine import Deck, start_round
-from Player import Player
+from core.GameEngine import Deck, start_round
+from core.Player import Player
 
 
 def printHands(p1, p2):

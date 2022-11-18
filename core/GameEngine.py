@@ -5,10 +5,10 @@ from random import shuffle
 import pygame.image
 from pygame import Surface
 from pygame.font import Font, get_default_font
-from pygame.sprite import Sprite
+from pygame.sprite import Sprite, Group
 
-from GameConstants import STARTING_SCREEN_TEXT
-from Player import Player
+from core.GameConstants import STARTING_SCREEN_TEXT
+from core.Player import Player
 
 color_speed = 1
 color = [26, 115, 50]
@@ -24,14 +24,19 @@ def draw_starting_screen(screen: Surface):
     card_back_2.rect.center = screen.get_rect().center
     card_back_2.rect.x += 1.5 * card_back_2.rect.width
 
+    card_backs = Group()
+    card_backs.add(card_back_1)
+    card_backs.add(card_back_2)
+
     font = Font(get_default_font(), 24)
 
-    screen.blit(card_back_1.image, card_back_1.rect)
-    screen.blit(card_back_2.image, card_back_2.rect)
+    card_backs.draw()
     screen.blit(
         font.render(STARTING_SCREEN_TEXT, True, color),
         (screen.get_rect().height // 2, screen.get_rect().width // 2)
     )
+
+
 
     color_update(color)
 
