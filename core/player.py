@@ -3,11 +3,11 @@ class Player:
         self.hand = []
         self.name = name
 
-    def drawCards(self, deck):
+    def draw_cards(self, deck):
         card = deck.popCard()
         self.hand.append(card)
 
-    def playCard(self):
+    def play_card(self):
         card = self.hand.pop()
         return card
 

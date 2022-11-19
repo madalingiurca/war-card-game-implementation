@@ -2,7 +2,7 @@ from core.game_engine import Deck, start_round
 from core.player import Player
 
 
-def printHands(p1, p2):
+def print_hands(p1, p2):
     print(p1.name, ': ', end='')
     for card in p1.hand:
         print(card.number, end='| ')
@@ -14,15 +14,15 @@ def printHands(p1, p2):
 
 
 deck = Deck()
-deck.shuffleDeck()
+deck.shuffle_deck()
 name = input("Player 1: Name?\n").capitalize()
 player1 = Player(name)
 name = input("Player 2: Name?\n").capitalize()
 player2 = Player(name)
 while True:
     try:
-        player1.drawCards(deck)
-        player2.drawCards(deck)
+        player1.draw_cards(deck)
+        player2.draw_cards(deck)
     except IndexError:
         print("Cards has been split!\n")
         break
@@ -30,9 +30,6 @@ while True:
 print("| {p1Name}: {p1CardsNO} cards | VS |".format(p1Name=player1.name, p1CardsNO=player1.hand.__len__()), end=" ")
 print("{p2Name}: {p2CardsNO} cards|".format(p2Name=player2.name, p2CardsNO=player2.hand.__len__()))
 
-# Inceputul jocului
-# Acesta se termina cand unul din jucatori ramane fara carti
-# Castigatorul se declara cel care inca are Cards in lista self.hand
 table = list()
 rounds = 0
 try:

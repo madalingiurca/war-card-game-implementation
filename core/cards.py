@@ -1,4 +1,3 @@
-import math
 import os
 from typing import Any
 
@@ -34,3 +33,7 @@ class Card(Sprite):
                 self.image,
                 (int(current_size[0] * (2 - ZOOM_FACTOR)), int(current_size[1] * (2 - ZOOM_FACTOR)))
             )
+
+    def move(self, x_offset: int, y_offset: int):
+        self.rect.x += x_offset
+        self.rect.y += y_offset
