@@ -1,18 +1,30 @@
+import logging
 from enum import Enum
 from random import shuffle
 
 import pygame
 from pygame import Surface
 from pygame.font import Font, get_default_font
+from pygame.sprite import Group
 
 from core.cards import Card
 from core.game_constants import STARTING_SCREEN_TEXT, GAME_TITLE
-from core.player import Player
+from core.player import Player, ScoreBoard
 from settings import BACKGROUND_COLOR
 
 color_speed = 1
 color = [26, 115, 50]
 color_direction = [0, 1, 0]
+
+
+def create_points_ui():
+    points_ui_sprites_group = Group()
+    player_score = ScoreBoard("Player 1", (1100, 650), Font(get_default_font(), 25))
+    opponent_score = ScoreBoard("Eric Cartman", (100, 50), Font(get_default_font(), 25))
+
+    points_ui_sprites_group.add(player_score)
+    points_ui_sprites_group.add(opponent_score)
+    return points_ui_sprites_group
 
 
 def update_game_start_text(screen: Surface):
@@ -31,27 +43,68 @@ def update_game_start_text(screen: Surface):
     color_update(color)
 
 
-def game_start_transition(selected_deck_theme: Card, screen: Surface):
-    animation_in_progress = True
-    animation_limits = screen.get_rect().bottomleft
+def handle_mouse_click_game_start(captured_event, start_group):
+    if len(captured_event) == 1:
+        [x, y] = captured_event[0].pos
+        if start_group.sprites()[0].rect.collidepoint(x, y):
+            player_deck_back = start_group.sprites()[0]
+            opponent_deck_back = start_group.sprites()[0].duplicate()
 
-    selected_deck_theme.image = pygame.transform.scale(
-        selected_deck_theme.image,
-        (int(selected_deck_theme.image.get_size()[0] * 0.7), int(selected_deck_theme.image.get_size()[1] * 0.7))
-    )
+        elif start_group.sprites()[1].rect.collidepoint(x, y):
+            player_deck_back = start_group.sprites()[1]
+            opponent_deck_back = start_group.sprites()[1].duplicate()
 
-    while animation_in_progress:
+        else:
+            return False
+
+        player_deck_back.image = pygame.transform.scale(
+            player_deck_back.image,
+            (int(player_deck_back.image.get_size()[0] * 0.7), int(player_deck_back.image.get_size()[1] * 0.7))
+        )
+        opponent_deck_back.image = player_deck_back.image.copy()
+
+        game_start_transition(player_deck_back, opponent_deck_back)
+
+        start_group.empty()
+        start_group.add(player_deck_back)
+        start_group.add(opponent_deck_back)
+
+        return True
+
+
+def game_start_transition(player_deck: Card, opponent_deck: Card):
+    screen = pygame.display.get_surface()
+
+    player_deck_position = (screen.get_rect().bottomleft[0] + player_deck.rect.height // 2,
+                            screen.get_rect().bottomleft[1] - player_deck.rect.width // 2)
+    opponent_deck_position = (screen.get_rect().topright[0] - player_deck.rect.width // 2,
+                              screen.get_rect().topright[1] + player_deck.rect.height // 2)
+
+    while True:
         screen.fill(BACKGROUND_COLOR)
-        screen.blit(selected_deck_theme.image, selected_deck_theme.rect)
+        screen.blit(player_deck.image, player_deck.rect)
+        screen.blit(opponent_deck.image, opponent_deck.rect)
         pygame.display.update()
-        previous_center = selected_deck_theme.rect.center
-        if selected_deck_theme.rect.bottomleft[0] > animation_limits[0]:
-            selected_deck_theme.rect.x -= 2
-        if not selected_deck_theme.rect.bottomleft[1] > animation_limits[1]:
-            selected_deck_theme.rect.y += 2
 
-        if previous_center == selected_deck_theme.rect.center:
-            animation_in_progress = False
+        move_card(player_deck, player_deck_position)
+        move_card(opponent_deck, opponent_deck_position)
+
+        if player_deck.rect.center == player_deck_position and opponent_deck.rect.center == opponent_deck_position:
+            break
+
+
+def move_card(card: Card, center):
+    desired_x = center[0]
+    desired_y = center[1]
+    animation_step = 1
+
+    x_speed = 1 if desired_x > card.rect.centerx else -1
+    y_speed = 1 if desired_y > card.rect.centery else -1
+
+    if card.rect.centerx != desired_x:
+        card.rect.x += animation_step * x_speed
+    if card.rect.centery != desired_y:
+        card.rect.y += animation_step * y_speed
 
 
 def color_update(color_to_update):
@@ -59,6 +112,36 @@ def color_update(color_to_update):
         color_to_update[i] += color_speed * color_direction[i]
         if color_to_update[i] <= 115 or color_to_update[i] >= 255:
             color_direction[i] *= -1
+
+
+def play_round(deck, clock):
+    logging.info("Round started")
+    screen = pygame.display.get_surface()
+
+    player_card: Card = deck.pop_card()
+    player_card.rect.center = screen.get_rect().center
+    player_card.move(-(player_card.rect.width // 2) - 25, 0)
+
+    opponent_card = deck.pop_card()
+    opponent_card.rect.center = screen.get_rect().center
+    opponent_card.move((opponent_card.rect.width // 2) + 25, 0)
+
+    pygame.display.get_surface().blit(player_card.image, player_card.rect)
+    pygame.display.get_surface().blit(opponent_card.image, opponent_card.rect)
+    pygame.display.update(player_card.rect)
+
+    while True:
+        logging.debug("waiting round result acknowledgement")
+        pygame.display.update()
+
+        events = pygame.event.get(pygame.MOUSEBUTTONUP)
+        if len(events) == 1:
+            break
+
+        pygame.display.update()
+        clock.tick(60)
+
+    logging.info("Round finished")
 
 
 class GameState(Enum):
@@ -82,8 +165,7 @@ class Deck:
         shuffle(self.cards)
 
     def pop_card(self) -> Card:
-        popped = self.cards.pop()
-        return popped
+        return self.cards.pop()
 
 
 def start_round(player1: Player, player2: Player, table: list):
