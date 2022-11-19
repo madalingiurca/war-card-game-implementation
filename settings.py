@@ -1,10 +1,10 @@
 import logging
-import os
 
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 700
 
 BACKGROUND_COLOR = '#1a7332'
+WHITE = '#FFFFFF'
+BLACK = '#000000'
 
-CARD_BACK_IMAGE_PATH = f"{os.getcwd()}assets/cards/back.png"
 LOGGING_LEVEL = logging.INFO

@@ -9,7 +9,7 @@ from pygame.sprite import Group
 
 from core.cards import Card
 from core.game_constants import STARTING_SCREEN_TEXT, GAME_TITLE
-from core.player import Player, ScoreBoard
+from core.player import ScoreBoard
 from settings import BACKGROUND_COLOR
 
 color_speed = 1
@@ -180,23 +180,3 @@ class Deck:
 
     def pop_card(self) -> Card:
         return self.cards.pop()
-
-
-def start_round(player1: Player, player2: Player, table: list):
-    p1_card = player1.play_card()
-    p2_card = player2.play_card()
-
-    table += [p2_card, p1_card]
-    if p1_card > p2_card:
-        print("{} wins the round".format(player1.name))
-        shuffle(table)
-        player1.hand = table + player1.hand
-        table.clear()
-        return 0
-    if p2_card > p1_card:
-        print("{} wins the round".format(player2.name))
-        shuffle(table)
-        player2.hand = table + player2.hand
-        table.clear()
-        return 0
-    start_round(player1, player2, table)

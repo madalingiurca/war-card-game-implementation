@@ -1,6 +1,6 @@
 from typing import Any
 
-from pygame import Surface, SRCALPHA, Color, Rect
+from pygame import Surface, SRCALPHA, Color
 from pygame.sprite import Sprite
 
 
@@ -17,6 +17,7 @@ class ScoreBoard(Sprite):
         height = self.font.get_height()
         text_surfaces = []
 
+        # noinspection PyCompatibility
         for txt in (self.name, f'score {self.score}'):
             text_surfaces.append(self.font.render(txt, True, Color("black")))
 
@@ -30,20 +31,3 @@ class ScoreBoard(Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.center = self.position
-
-
-class Player:
-    def __init__(self, name="test"):
-        self.hand = []
-        self.name = name
-
-    def draw_cards(self, deck):
-        card = deck.popCard()
-        self.hand.append(card)
-
-    def play_card(self):
-        card = self.hand.pop()
-        return card
-
-    def __str__(self):
-        return "{} has {} cards left".format(self.name, len(self.hand))
