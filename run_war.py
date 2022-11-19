@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
     def start_over():
         global current_game_state, deck, points_ui
-        current_game_state = GameState.START
+        current_game_state = GameState.PLAY
         deck = Deck()
         deck.shuffle_deck()
         points_ui = create_points_ui()
@@ -63,13 +63,16 @@ if __name__ == '__main__':
             points_ui.draw(screen)
 
             player_deck_ui = card_deck_backs.sprites()[0]
-            player_deck_ui.update(screen, max_width=140, persistent_width=136)
+            player_deck_ui.update(screen, max_width=136, persistent_width=136)
             card_deck_backs.draw(screen)
 
             events = pygame.event.get(pygame.MOUSEBUTTONUP)
-            play_instruction = Font(get_default_font(), 20).render("Play card", True, pygame.Color("black"))
+            play_instruction = Font(get_default_font(), 18).render("Play card", True, pygame.Color(BLACK))
 
-            screen.blit(play_instruction, player_deck_ui.rect.center)
+            play_instruction_rect = play_instruction.get_rect()
+            play_instruction_rect.center = player_deck_ui.rect.center
+
+            screen.blit(play_instruction, play_instruction_rect)
             if len(events) == 1 and player_deck_ui.rect.collidepoint(events[0].pos[0], events[0].pos[1]):
                 round_result = play_round(deck, clock)
                 if round_result > 0:
@@ -77,8 +80,8 @@ if __name__ == '__main__':
                 elif round_result < 0:
                     points_ui.sprites()[1].score += 1
 
-                if len(deck.cards) < 2:
-                    current_game_state = GameState.ENDING
+            if len(deck.cards) < 2:
+                current_game_state = GameState.ENDING
 
         if current_game_state == GameState.ENDING:
             text = win_screen_surface \

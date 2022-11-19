@@ -41,7 +41,8 @@ class Card(Sprite):
             self.image,
             (int(current_size[0] * zoom_factor), int(current_size[1] * zoom_factor))
         )
-        # self.rect = self.image.get_rect()
+        self.rect.width = self.image.get_rect().width
+        self.rect.height = self.image.get_rect().height
 
     def move(self, x_offset: int, y_offset: int):
         self.rect.x += x_offset

@@ -19,7 +19,7 @@ color_direction = [0, 1, 0]
 
 def create_points_ui():
     points_ui_sprites_group = Group()
-    player_score = ScoreBoard("Player 1", (1100, 650), Font(get_default_font(), 25))
+    player_score = ScoreBoard("You", (1100, 650), Font(get_default_font(), 25))
     opponent_score = ScoreBoard("Eric Cartman", (100, 50), Font(get_default_font(), 25))
 
     points_ui_sprites_group.add(player_score)
@@ -120,11 +120,11 @@ def play_round(deck, clock):
 
     player_card = deck.pop_card()
     player_card.rect.center = screen.get_rect().center
-    player_card.move(-(player_card.rect.width // 2) - 25, 0)
+    player_card.move(-(player_card.rect.width // 2) - 50, 60)
 
     opponent_card = deck.pop_card()
     opponent_card.rect.center = screen.get_rect().center
-    opponent_card.move((opponent_card.rect.width // 2) + 25, 0)
+    opponent_card.move((opponent_card.rect.width // 2) + 50, -60)
 
     pygame.display.get_surface().blit(player_card.image, player_card.rect)
     pygame.display.get_surface().blit(opponent_card.image, opponent_card.rect)
