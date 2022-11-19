@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import os
 from typing import Any
@@ -30,7 +32,7 @@ class Card(Sprite):
                 self.image,
                 (int(current_size[0] * zoom_factor), int(current_size[1] * zoom_factor))
             )
-            self.rect.width = self.image.get_rect().width
+            # self.rect.width = self.image.get_rect().width
 
         elif not self.rect.collidepoint(pygame.mouse.get_pos()) and self.image.get_rect().width >= persistent_width:
             logging.debug(f"Zooming out: {self.rect.width}")
@@ -39,7 +41,12 @@ class Card(Sprite):
                 self.image,
                 (int(current_size[0] * (2 - zoom_factor)), int(current_size[1] * (2 - zoom_factor)))
             )
-        self.rect.width = self.image.get_rect().width
+
+    def compare_to(self, other: Card) -> int:
+        if self.number == other.number:
+            return 0
+        else:
+            return 1 if self.number > other.number else -1
 
     def move(self, x_offset: int, y_offset: int):
         self.rect.x += x_offset

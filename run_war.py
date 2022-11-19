@@ -1,5 +1,7 @@
 import sys
 
+import pygame
+
 from core.game_engine import *
 from core.game_utils import get_starting_screen_card_backs_centered
 from settings import *
@@ -41,8 +43,17 @@ if __name__ == '__main__':
             card_deck_backs.draw(screen)
 
             events = pygame.event.get(pygame.MOUSEBUTTONUP)
+            play_instruction = Font(get_default_font(), 20).render("Play card", True, pygame.Color("black"))
+
+            screen.blit(play_instruction, player_deck_ui.rect.center)
+            logging.debug(f"mouse position {pygame.mouse.get_pos()}")
             if len(events) == 1 and player_deck_ui.rect.collidepoint(events[0].pos[0], events[0].pos[1]):
-                play_round(deck, clock)
+                round_result = play_round(deck, clock)
+                if round_result > 0:
+                    points_ui.sprites()[0].score += 1
+                elif round_result < 0:
+                    points_ui.sprites()[1].score += 1
+
                 if len(deck.cards) < 2:
                     current_game_state = GameState.ENDING
 

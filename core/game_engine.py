@@ -78,7 +78,7 @@ def game_start_transition(player_deck: Card, opponent_deck: Card):
     player_deck_position = (screen.get_rect().bottomleft[0] + player_deck.rect.height // 2,
                             screen.get_rect().bottomleft[1] - player_deck.rect.width // 2)
     opponent_deck_position = (screen.get_rect().topright[0] - player_deck.rect.width // 2,
-                              screen.get_rect().topright[1] + player_deck.rect.height // 2)
+                              screen.get_rect().topright[1] + player_deck.rect.height // 2 + 30)
 
     while True:
         screen.fill(BACKGROUND_COLOR)
@@ -118,7 +118,7 @@ def play_round(deck, clock):
     logging.info("Round started")
     screen = pygame.display.get_surface()
 
-    player_card: Card = deck.pop_card()
+    player_card = deck.pop_card()
     player_card.rect.center = screen.get_rect().center
     player_card.move(-(player_card.rect.width // 2) - 25, 0)
 
@@ -128,11 +128,24 @@ def play_round(deck, clock):
 
     pygame.display.get_surface().blit(player_card.image, player_card.rect)
     pygame.display.get_surface().blit(opponent_card.image, opponent_card.rect)
-    pygame.display.update(player_card.rect)
 
+    result = player_card.compare_to(opponent_card)
+
+    round_result_font = Font(get_default_font(), 24)
+
+    if result == 0:
+        round_result_text = round_result_font.render("WAR", True, pygame.Color("black"))
+    else:
+        round_result_text = round_result_font.render("You won!" if result > 0 else "You lost..", True,
+                                                     pygame.Color("black"))
+
+    round_result_text_position = list(screen.get_rect().center)
+    round_result_text_position[0] -= round_result_text.get_rect().width // 2
+    round_result_text_position[1] -= (player_card.rect.height // 2) + 120
+
+    screen.blit(round_result_text, round_result_text_position)
     while True:
         logging.debug("waiting round result acknowledgement")
-        pygame.display.update()
 
         events = pygame.event.get(pygame.MOUSEBUTTONUP)
         if len(events) == 1:
@@ -142,6 +155,7 @@ def play_round(deck, clock):
         clock.tick(60)
 
     logging.info("Round finished")
+    return result
 
 
 class GameState(Enum):
