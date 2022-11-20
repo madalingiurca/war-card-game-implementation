@@ -2,6 +2,8 @@
 
 Card game - Python 3.6
 
+You can find the latest release under [Github Releases](https://github.com/madalingiurca/war-card-game-implementation/releases)
+
 ## Prerequisites
 
 * Python version 3.9 or higher
