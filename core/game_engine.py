@@ -114,7 +114,7 @@ def color_update(color_to_update):
             color_direction[i] *= -1
 
 
-def play_round(deck, clock):
+def play_round(deck, clock, win_sound, lose_sound):
     logging.info("Round started")
     screen = pygame.display.get_surface()
 
@@ -135,10 +135,12 @@ def play_round(deck, clock):
 
     if result == 0:
         round_result_text = round_result_font.render("WAR", True, pygame.Color("black"))
+    elif result > 0:
+        round_result_text = round_result_font.render("You won!", True, pygame.Color("black"))
     else:
-        round_result_text = round_result_font.render("You won!" if result > 0 else "You lost..", True,
-                                                     pygame.Color("black"))
+        round_result_text = round_result_font.render("You lost..", True, pygame.Color("black"))
 
+    clock.tick(60)
     round_result_text_position = list(screen.get_rect().center)
     round_result_text_position[0] -= round_result_text.get_rect().width // 2
     round_result_text_position[1] -= (player_card.rect.height // 2) + 120

@@ -14,6 +14,11 @@ if __name__ == '__main__':
     pygame.init()
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.mixer.music.load("assets/sound/starting_music.mp3")
+
+    win_round_sound = pygame.mixer.Sound("assets/sound/round_win.wav")
+    lose_round_sound = pygame.mixer.Sound("assets/sound/round_lose.wav")
+
     pygame.display.set_caption('Cards War')
     clock = pygame.time.Clock()
     logging.basicConfig(level=LOGGING_LEVEL)
@@ -50,6 +55,7 @@ if __name__ == '__main__':
     while True:
         screen.fill(BACKGROUND_COLOR)
         if current_game_state == GameState.START:
+            pygame.mixer.music.play(-1)
             update_game_start_text(screen)
             card_deck_backs.update()
             card_deck_backs.draw(screen)
@@ -74,16 +80,19 @@ if __name__ == '__main__':
 
             screen.blit(play_instruction, play_instruction_rect)
             if len(events) == 1 and player_deck_ui.rect.collidepoint(events[0].pos[0], events[0].pos[1]):
-                round_result = play_round(deck, clock)
+                round_result = play_round(deck, clock, win_round_sound, lose_round_sound)
                 if round_result > 0:
                     points_ui.sprites()[0].score += 1
+                    pygame.mixer.Sound.play(win_round_sound)
                 elif round_result < 0:
+                    pygame.mixer.Sound.play(lose_round_sound)
                     points_ui.sprites()[1].score += 1
 
             if len(deck.cards) < 2:
                 current_game_state = GameState.ENDING
 
         if current_game_state == GameState.ENDING:
+            pygame.mixer.music.stop()
             text = win_screen_surface \
                 if points_ui.sprites()[0].score > points_ui.sprites()[1].score \
                 else lose_screen_surface
